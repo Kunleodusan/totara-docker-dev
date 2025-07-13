@@ -27,14 +27,14 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists
 
+# Link mssql-tools18 to mssql-tools for backward compatibility
+RUN ln -s /usr/bin/mssql-tools18 /usr/bin/mssql-tools
+
 # Copy the config across
-RUN mkdir -p /usr/config
-COPY 2022/custom /usr/config
+RUN mkdir /custom
+COPY custom /custom/
 
-RUN chmod +x /usr/config/entrypoint.sh
-RUN chmod +x /usr/config/setup.sh
-
-WORKDIR /usr/config
+RUN chmod +x /custom/*.sh
 
 # Run SQL Server process
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/custom/entrypoint.sh"]
